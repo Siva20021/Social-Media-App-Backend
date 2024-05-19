@@ -38,6 +38,8 @@ model Posts {
 model Comments {
   id        String  @id @default(auto()) @map("_id") @db.ObjectId
   content   String
+  userId    String @db.ObjectId 
+  name      String
   postId    String @db.ObjectId
   post Posts @relation(fields: [postId], references: [id])
   createdAt DateTime @default(now())

@@ -46,6 +46,10 @@ export const login = async (req, res, next) => {
     const user = await prisma.user.findFirst({
       where:{
         username: req.body.username
+      },
+      include:{
+        posts:true,
+        friends:true,
       }
     });
     if (!user) return res.status(400).send("User not found!");
