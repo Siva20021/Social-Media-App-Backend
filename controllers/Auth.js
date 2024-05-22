@@ -12,7 +12,7 @@ const age = 1000 * 60 * 60 * 24 * 7;
 export const register = async (req, res, next) => {
   const {username, email, password} = req.body;
   try {
-    const hash = await bcrypt.hash(password, 10);
+    const hash = bcrypt.hashSync(password, 5);
     const user = await prisma.user.findFirst({
       where:{
         OR:[
@@ -53,7 +53,9 @@ export const login = async (req, res, next) => {
       }
     });
     if (!user) return res.status(400).send("User not found!");
-    const match = await bcrypt.compare(req.body.password, user.password);
+    console.log(user.password, req.body.password);
+  
+    const match = bcrypt.compareSync(req.body.password, user.password);
     if (!match) return res.status(400).send("Invalid credentials!");
     const token =jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
       expiresIn: age,
